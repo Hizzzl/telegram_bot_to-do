@@ -10,5 +10,8 @@ router = Router()
 
 @router.message(Command("start"))
 async def main_page(message, state: FSMContext):
+  """
+  Функция, которая возвращает на главную страницу
+  """
   user_service.update_user_exists(message.from_user.id, get_username_from_message(message))
   await return_to_main_page(message, state)
