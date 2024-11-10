@@ -11,10 +11,7 @@ class ReplyKeyboard:
     keyboard=[
       [KeyboardButton(text="Ежедневные задачи 📅")],
       [KeyboardButton(text="Недельные задачи 📅")],
-      [KeyboardButton(text="Проекты 📝")],
-      [KeyboardButton(text="Стрик 🔥")],
-      [KeyboardButton(text="Статистика 📊")],
-      [KeyboardButton(text="Настройки ⚙️")]
+      [KeyboardButton(text="Проекты 📝")]
     ],
     resize_keyboard=True
   )
