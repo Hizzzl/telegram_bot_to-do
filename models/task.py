@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, time
 from typing import Optional
 
 class Task(BaseModel):
@@ -12,4 +12,5 @@ class Task(BaseModel):
   deadline: Optional[datetime] = None
   week_first_day_date: datetime
   day_date: Optional[datetime] = None
+  start_time: Optional[datetime] = None
   duration: int

@@ -322,11 +322,17 @@ async def project_tasks(message, state: FSMContext):
       username = "@" + username
     else:
       username = "нет ответственного"
-    if task.completed:
-      check = "✅"
-    else:
-      check = "❌"
-    message_text += str(i + 1) + ".\n" + "Название: " + str(task.title) + "\n" + "Выполнено: " + check + "\n" + "Дедлайн: " + str(task.deadline) + "\n" + "Длительность: " + str(task.duration) + " минут\n" + "Ответственный: " + username + "\n\n"
+
+    message_text += f"{i + 1}. {task.title}\n"
+    if task.start_time:
+      message_text += f"   🕒 Начало: {task.start_time.strftime('%H:%M')}\n"
+    if task.day_date:
+      message_text += f"   📅 Дата: {task.day_date.strftime('%d.%m.%Y')}\n"
+    message_text += f"   ⏱ Длительность: {task.duration} минут\n"
+    if task.deadline:
+      message_text += f"   📅 Дедлайн: {task.deadline.strftime('%d.%m.%Y')}\n"
+    message_text += f"   👤 Ответственный: {username}\n"
+    message_text += f"   ✅ Статус: {'Выполнено' if task.completed else 'Не выполнено'}\n\n"
 
   keyboard = KeyboardService.get_project_tasks_keyboard(message.from_user.id)
   message = await message.answer(
@@ -365,7 +371,7 @@ async def process_member_name_for_delete(message, state: FSMContext):
       reply_markup=keyboard
     )
     return
-
+  
   data = await state.get_data()
   project_id = data.get("project_id", None)
   user_id = user_service.get_user_id_by_username(username)
@@ -689,9 +695,15 @@ async def process_responsible_person(message, state: FSMContext):
     )
     return
   
-  await state.update_data("responsible_id", user_id)
+  await state.update_data({"responsible_id": user_id})
   await state.update_data({"week_first_day_date": get_first_day_of_week(datetime.date.today())})
-  await process_add_task(message, state)
+  
+  await state.set_state(UserState.waiting_for_project_task_name)
+  keyboard = KeyboardService.get_return_main_page_keyboard(message.from_user.id)
+  await message.answer(
+    text="Введите название задачи:",
+    reply_markup=keyboard
+  )
 
 @router.message(lambda message: message.text == "Нет", UserState.process_responsible_person)
 async def process_add_task_project(message, state: FSMContext):
@@ -701,7 +713,12 @@ async def process_add_task_project(message, state: FSMContext):
   user_service.update_user_exists(message.from_user.id, get_username_from_message(message))
   await state.update_data({"week_first_day_date": get_first_day_of_week(datetime.date.today())})
 
-  await process_add_task(message, state)
+  await state.set_state(UserState.waiting_for_project_task_name)
+  keyboard = KeyboardService.get_return_main_page_keyboard(message.from_user.id)
+  await message.answer(
+    text="Введите название задачи:",
+    reply_markup=keyboard
+  )
   
 @router.message(lambda message: message.text == "🔙 Вернуться назад", UserState.on_project_tasks_page)
 async def return_to_project_page(message, state: FSMContext):
@@ -724,3 +741,121 @@ async def return_to_main_page_project(message, state: FSMContext):
 
   await state.set_state(UserState.on_start_page)
   await return_to_main_page(message, state)
+
+@router.message(UserState.waiting_for_project_task_name)
+async def process_task_name_project(message, state: FSMContext):
+  """
+  Функция, которая обрабатывает название задачи проекта
+  """
+  user_service.update_user_exists(message.from_user.id, get_username_from_message(message))
+  try:
+    task_name = message.text.strip()
+  except ValueError:
+    keyboard = KeyboardService.get_main_page_keyboard(message.from_user.id)
+    await message.answer(
+      text=Messages.Error.something_went_wrong,
+      reply_markup=keyboard
+    )
+    return
+
+  await state.update_data({"title": task_name})
+  await state.set_state(UserState.waiting_for_task_start_date)
+
+  keyboard = KeyboardService.get_return_main_page_keyboard(message.from_user.id)
+  await message.answer(
+    text="Введите дату начала задачи в формате ДД.ММ.ГГГГ:",
+    reply_markup=keyboard
+  )
+
+@router.message(UserState.waiting_for_task_start_date)
+async def process_task_start_date(message, state: FSMContext):
+  """
+  Функция, которая обрабатывает дату начала задачи проекта
+  """
+  user_service.update_user_exists(message.from_user.id, get_username_from_message(message))
+  try:
+    start_date = datetime.datetime.strptime(message.text.strip(), "%d.%m.%Y")
+  except ValueError:
+    keyboard = KeyboardService.get_return_main_page_keyboard(message.from_user.id)
+    await message.answer(
+      text="Неверный формат даты. Пожалуйста, введите дату в формате ДД.ММ.ГГГГ",
+      reply_markup=keyboard
+    )
+    return
+
+  await state.update_data({"day_date": start_date})
+  await state.set_state(UserState.process_task_start_time)
+
+  keyboard = KeyboardService.get_task_start_time_exists_keyboard(message.from_user.id)
+  await message.answer(
+    text=Messages.AddTask.task_start_time_exists_question,
+    reply_markup=keyboard
+  )
+
+@router.message(lambda message: message.text == "Да, будет время начала", UserState.process_task_start_time)
+async def process_task_start_time_yes_project(message, state: FSMContext):
+  """
+  Функция, которая обрабатывает наличие времени начала задачи проекта
+  """
+  user_service.update_user_exists(message.from_user.id, get_username_from_message(message))
+  await state.set_state(UserState.waiting_for_task_start_time)
+  keyboard = KeyboardService.get_return_main_page_keyboard(message.from_user.id)
+  await message.answer(
+    text="Введите время начала в формате ЧЧ:ММ",
+    reply_markup=keyboard
+  )
+
+@router.message(UserState.waiting_for_task_start_time)
+async def process_task_start_time_project(message, state: FSMContext):
+  """
+  Функция, которая обрабатывает время начала задачи проекта
+  """
+  user_service.update_user_exists(message.from_user.id, get_username_from_message(message))
+  try:
+    time_parts = message.text.strip().split(":")
+    if len(time_parts) != 2:
+      raise ValueError()
+    
+    hours = int(time_parts[0])
+    minutes = int(time_parts[1])
+    
+    if hours < 0 or hours > 23 or minutes < 0 or minutes > 59:
+      raise ValueError()
+      
+    data = await state.get_data()
+    start_date = data.get("start_date")
+    start_datetime = start_date.replace(hour=hours, minute=minutes)
+    
+    await state.update_data({"start_time": start_datetime})
+    
+  except ValueError:
+    keyboard = KeyboardService.get_return_main_page_keyboard(message.from_user.id)
+    await message.answer(
+      text="Неверный формат времени. Пожалуйста, введите время в формате ЧЧ:ММ",
+      reply_markup=keyboard
+    )
+    return
+
+  await state.set_state(UserState.process_task_duration)
+  keyboard = KeyboardService.get_task_duration_keyboard(message.from_user.id)
+  await message.answer(
+    text=Messages.AddTask.task_duration_question,
+    reply_markup=keyboard
+  )
+
+@router.message(lambda message: message.text == "Нет, не будет времени начала", UserState.process_task_start_time)
+async def process_task_start_time_no_project(message, state: FSMContext):
+  """
+  Функция, которая обрабатывает отсутствие времени начала задачи проекта
+  """
+  user_service.update_user_exists(message.from_user.id, get_username_from_message(message))
+  data = await state.get_data()
+  start_date = data.get("start_date")
+  await state.update_data({"start_time": start_date})
+  
+  await state.set_state(UserState.process_task_duration)
+  keyboard = KeyboardService.get_task_duration_keyboard(message.from_user.id)
+  await message.answer(
+    text=Messages.AddTask.task_duration_question,
+    reply_markup=keyboard
+  )

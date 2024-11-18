@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, Boolean, BigInteger
+from sqlalchemy import Column, Integer, String, Date, Boolean, BigInteger, Time, DateTime
 from database_tables.base_database import Base
 
 class Task_table(Base):
@@ -14,3 +14,4 @@ class Task_table(Base):
   week_first_day_date = Column(Date, nullable=False)
   day_date = Column(Date, nullable=True, default=None)
   duration = Column(Integer, nullable=False, default=0)
+  start_time = Column(DateTime, nullable=True, default=None)

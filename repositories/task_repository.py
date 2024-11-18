@@ -54,6 +54,7 @@ class TaskRepository:
         deadline=task.deadline,
         week_first_day_date=task.week_first_day_date,
         day_date=task.day_date,
+        start_time=task.start_time,
         duration=task.duration
       ))
     return tasks

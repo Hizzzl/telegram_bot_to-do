@@ -20,8 +20,14 @@ class TaskService:
     deadline = data.get("deadline", None)
     week_first_day_date = data.get("week_first_day_date", None)
     day_date = data.get("day_date", None)
+    start_time = data.get("start_time", None)
     hours, minutes = data.get("duration", 0)
     duration = hours * 60 + minutes
+
+    if start_time and day_date:
+        start_datetime = datetime.datetime.combine(day_date, start_time)
+    else:
+        start_datetime = None
 
     task = Task(
       task_id=0,
@@ -33,6 +39,7 @@ class TaskService:
       deadline=deadline,
       week_first_day_date=week_first_day_date,
       day_date=day_date,
+      start_time=start_datetime,
       duration=duration
     )
     self.task_repository.create_task(task)
@@ -96,6 +103,9 @@ class TaskService:
     tasks = self.task_repository.get_tasks_by_date(user_id, old_date)
     for task in tasks:
       task.day_date = new_date
+      task.week_first_day_date = new_date - datetime.timedelta(days=new_date.weekday())
+      if task.start_time:
+        task.start_time = task.start_time.replace(year=new_date.year, month=new_date.month, day=new_date.day)
       self.task_repository.update_task(task.task_id, task)
 
   def get_tasks_by_week_date(self, user_id: int, week_first_day_date: datetime) -> List[Task]:
@@ -119,6 +129,10 @@ class TaskService:
     tasks = self.task_repository.get_tasks_by_week_date(user_id, week_date)
     for task in tasks:
       task.week_first_day_date = task.week_first_day_date + datetime.timedelta(days=7)
+      if task.start_time:
+        task.start_time = task.start_time + datetime.timedelta(days=7)
+      if task.day_date:
+        task.day_date = task.day_date + datetime.timedelta(days=7)
       self.task_repository.update_task(task.task_id, task)
 
   def distribute_tasks(self, user_id: int, week_date: datetime) -> None:
@@ -226,7 +240,8 @@ class TaskService:
               deadline=my_task.deadline,
               week_first_day_date=my_task.week_first_day_date,
               day_date=my_task.day_date,
-              duration=my_task.duration
+              duration=my_task.duration,
+              start_time=my_task.start_time
             )
             self.task_repository.update_task(my_task.task_id, updated_task)
 
@@ -243,4 +258,11 @@ class TaskService:
     task = self.task_repository.get_task_by_id(task_id)
     task.responsible_id = user_id
     self.task_repository.update_task(task_id, task)
-    
+
+  def edit_task_start_time(self, task_id: int, start_time: datetime) -> None:
+    """
+    Изменяет время начала задачи
+    """
+    task = self.task_repository.get_task_by_id(task_id)
+    task.start_time = datetime.datetime.combine(task.day_date, start_time)
+    self.task_repository.update_task(task_id, task)

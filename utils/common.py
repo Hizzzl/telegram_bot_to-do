@@ -97,7 +97,7 @@ def get_username(message: str) -> tuple[str, str]:
 
   return username, None
 
-def get_username_from_message(message) -> Optional[str]:
+def get_username_from_message(message):
   """
   По пользователю получим строку, которая будет использоваться в качестве username в боте
   """
@@ -112,3 +112,18 @@ def get_username_from_message(message) -> Optional[str]:
       else:
         if (message.from_user.last_name):
           return message.from_user.last_name
+
+def get_task_start_time(message: str) -> tuple[datetime.time, str]:
+  """
+  Из сообщения получает время начала задачи и возвращает его
+  Если функция завершена без ошибок, то возвращается None в переменной ошибки
+  """
+  try:
+    hours, minutes = map(int, message.strip().split(':'))
+    if hours < 0 or minutes < 0:
+      return None, Messages.Errors.task_start_time_format_error
+    if hours >= 24 or minutes >= 60:
+      return None, Messages.Errors.task_start_time_format_error
+    return datetime.time(hours, minutes), None
+  except ValueError:
+    return None, Messages.Errors.task_start_time_format_error

@@ -94,7 +94,8 @@ class SQLAlchemyRepository(DatabaseInterface):
       deadline=task.deadline,
       week_first_day_date=task.week_first_day_date,
       day_date=task.day_date,
-      duration=task.duration
+      duration=task.duration,
+      start_time=task.start_time
     )
     self.session.add(new_task)
     self.session.commit()
@@ -116,8 +117,10 @@ class SQLAlchemyRepository(DatabaseInterface):
         deadline=task.deadline,
         week_first_day_date=task.week_first_day_date,
         day_date=task.day_date,
-        duration=task.duration
+        duration=task.duration,
+        start_time=task.start_time,
       )
+      print(my_task)
       return my_task
     return None
 
@@ -143,7 +146,8 @@ class SQLAlchemyRepository(DatabaseInterface):
         deadline=task.deadline,
         week_first_day_date=task.week_first_day_date,
         day_date=task.day_date,
-        duration=task.duration
+        duration=task.duration,
+        start_time=task.start_time
       )
       tasks.append(converted_task)
     return tasks
@@ -161,7 +165,8 @@ class SQLAlchemyRepository(DatabaseInterface):
       deadline=task.deadline,
       week_first_day_date=task.week_first_day_date,
       day_date=task.day_date,
-      duration=task.duration
+      duration=task.duration,
+      start_time=task.start_time
     )
     self.session.execute(stmt)
     self.session.commit()
@@ -188,7 +193,8 @@ class SQLAlchemyRepository(DatabaseInterface):
         deadline=task.deadline,
         week_first_day_date=task.week_first_day_date,
         day_date=task.day_date,
-        duration=task.duration
+        duration=task.duration,
+        start_time=task.start_time
       )
       tasks.append(converted_task)
     return tasks

@@ -33,11 +33,13 @@ async def show_weekly_tasks(message, state: FSMContext):
     for task in tasks:
       if task.day_date and task.day_date.weekday() == 0:
         i += 1
-        if task.completed:
-          check = "✅"
-        else:
-          check = "❌"
-        message_text += str(i) + ".\n" + "Название: " + str(task.title) + "\n" + "Выполнено: " + check + "\n" + "Дедлайн: " + str(task.deadline) + "\n" + "Длительность: " + str(task.duration) + " минут\n"
+        message_text += f"{i}. {task.title}\n"
+        if task.start_time:
+          message_text += f"   🕒 Начало: {task.start_time.strftime('%H:%M')}\n"
+        message_text += f"   ⏱ Длительность: {task.duration} минут\n"
+        if task.deadline:
+          message_text += f"   📅 Дедлайн: {task.deadline.strftime('%d.%m.%Y')}\n"
+        message_text += f"   ✅ Статус: {'Выполнено' if task.completed else 'Не выполнено'}\n"
     message_text += "\n"
 
     i = 0
@@ -46,11 +48,13 @@ async def show_weekly_tasks(message, state: FSMContext):
     for task in tasks:
       if task.day_date and task.day_date.weekday() == 1:
         i += 1
-        if task.completed:
-          check = "✅"
-        else:
-          check = "❌"
-        message_text += str(i) + ".\n" + "Название: " + str(task.title) + "\n" + "Выполнено: " + check + "\n" + "Дедлайн: " + str(task.deadline) + "\n" + "Длительность: " + str(task.duration) + " минут\n"
+        message_text += f"{i}. {task.title}\n"
+        if task.start_time:
+          message_text += f"   🕒 Начало: {task.start_time.strftime('%H:%M')}\n"
+        message_text += f"   ⏱ Длительность: {task.duration} минут\n"
+        if task.deadline:
+          message_text += f"   📅 Дедлайн: {task.deadline.strftime('%d.%m.%Y')}\n"
+        message_text += f"   ✅ Статус: {'Выполнено' if task.completed else 'Не выполнено'}\n"
     message_text += "\n"
 
     i = 0
@@ -59,11 +63,13 @@ async def show_weekly_tasks(message, state: FSMContext):
     for task in tasks:
       if task.day_date and task.day_date.weekday() == 2:
         i += 1
-        if task.completed:
-          check = "✅"
-        else:
-          check = "❌"
-        message_text += str(i) + ".\n" + "Название: " + str(task.title) + "\n" + "Выполнено: " + check + "\n" + "Дедлайн: " + str(task.deadline) + "\n" + "Длительность: " + str(task.duration) + " минут\n"
+        message_text += f"{i}. {task.title}\n"
+        if task.start_time:
+          message_text += f"   🕒 Начало: {task.start_time.strftime('%H:%M')}\n"
+        message_text += f"   ⏱ Длительность: {task.duration} минут\n"
+        if task.deadline:
+          message_text += f"   📅 Дедлайн: {task.deadline.strftime('%d.%m.%Y')}\n"
+        message_text += f"   ✅ Статус: {'Выполнено' if task.completed else 'Не выполнено'}\n"
     message_text += "\n"
 
     i = 0
@@ -71,11 +77,13 @@ async def show_weekly_tasks(message, state: FSMContext):
     for task in tasks:
       if task.day_date and task.day_date.weekday() == 3:
         i += 1
-        if task.completed:
-          check = "✅"
-        else:
-          check = "❌"
-        message_text += str(i) + ".\n" + "Название: " + str(task.title) + "\n" + "Выполнено: " + check + "\n" + "Дедлайн: " + str(task.deadline) + "\n" + "Длительность: " + str(task.duration) + " минут\n"
+        message_text += f"{i}. {task.title}\n"
+        if task.start_time:
+          message_text += f"   🕒 Начало: {task.start_time.strftime('%H:%M')}\n"
+        message_text += f"   ⏱ Длительность: {task.duration} минут\n"
+        if task.deadline:
+          message_text += f"   📅 Дедлайн: {task.deadline.strftime('%d.%m.%Y')}\n"
+        message_text += f"   ✅ Статус: {'Выполнено' if task.completed else 'Не выполнено'}\n"
     message_text += "\n"
 
     i = 0
@@ -83,11 +91,13 @@ async def show_weekly_tasks(message, state: FSMContext):
     for task in tasks:
       if task.day_date and task.day_date.weekday() == 4:
         i += 1
-        if task.completed:
-          check = "✅"
-        else:
-          check = "❌"
-        message_text += str(i) + ".\n" + "Название: " + str(task.title) + "\n" + "Выполнено: " + check + "\n" + "Дедлайн: " + str(task.deadline) + "\n" + "Длительность: " + str(task.duration) + " минут\n"
+        message_text += f"{i}. {task.title}\n"
+        if task.start_time:
+          message_text += f"   🕒 Начало: {task.start_time.strftime('%H:%M')}\n"
+        message_text += f"   ⏱ Длительность: {task.duration} минут\n"
+        if task.deadline:
+          message_text += f"   📅 Дедлайн: {task.deadline.strftime('%d.%m.%Y')}\n"
+        message_text += f"   ✅ Статус: {'Выполнено' if task.completed else 'Не выполнено'}\n"
     message_text += "\n"
 
     i = 0
@@ -96,11 +106,13 @@ async def show_weekly_tasks(message, state: FSMContext):
     for task in tasks:
       if task.day_date and task.day_date.weekday() == 5:
         i += 1
-        if task.completed:
-          check = "✅"
-        else:
-          check = "❌"
-        message_text += str(i) + ".\n" + "Название: " + str(task.title) + "\n" + "Выполнено: " + check + "\n" + "Дедлайн: " + str(task.deadline) + "\n" + "Длительность: " + str(task.duration) + " минут\n"
+        message_text += f"{i}. {task.title}\n"
+        if task.start_time:
+          message_text += f"   🕒 Начало: {task.start_time.strftime('%H:%M')}\n"
+        message_text += f"   ⏱ Длительность: {task.duration} минут\n"
+        if task.deadline:
+          message_text += f"   📅 Дедлайн: {task.deadline.strftime('%d.%m.%Y')}\n"
+        message_text += f"   ✅ Статус: {'Выполнено' if task.completed else 'Не выполнено'}\n"
     message_text += "\n"
 
     i = 0
@@ -109,22 +121,28 @@ async def show_weekly_tasks(message, state: FSMContext):
     for task in tasks:
       if task.day_date and task.day_date.weekday() == 6:
         i += 1
-        if task.completed:
-          check = "✅"
-        else:
-          check = "❌"
-        message_text += str(i) + ".\n" + "Название: " + str(task.title) + "\n" + "Выполнено: " + check + "\n" + "Дедлайн: " + str(task.deadline) + "\n" + "Длительность: " + str(task.duration) + " минут\n"
+        message_text += f"{i}. {task.title}\n"
+        if task.start_time:
+          message_text += f"   🕒 Начало: {task.start_time.strftime('%H:%M')}\n"
+        message_text += f"   ⏱ Длительность: {task.duration} минут\n"
+        if task.deadline:
+          message_text += f"   📅 Дедлайн: {task.deadline.strftime('%d.%m.%Y')}\n"
+        message_text += f"   ✅ Статус: {'Выполнено' if task.completed else 'Не выполнено'}\n"
+    message_text += "\n"
 
     i = 0
     message_text += "Не назначенные задачи:\n"
     for task in tasks:
       if not task.day_date:
         i += 1
-        if task.completed:
-          check = "✅"
-        else:
-          check = "❌"
-        message_text += str(i) + ".\n" + "Название: " + str(task.title) + "\n" + "Выполнено: " + check + "\n" + "Дедлайн: " + str(task.deadline) + "\n" + "Длительность: " + str(task.duration) + " минут\n"
+        message_text += f"{i + 1}. {task.title}\n"
+        if task.start_time:
+          message_text += f"   🕒 Начало: {task.start_time.strftime('%H:%M')}\n"
+        message_text += f"   ⏱ Длительность: {task.duration} минут\n"
+        if task.deadline:
+          message_text += f"   📅 Дедлайн: {task.deadline.strftime('%d.%m.%Y')}\n"
+        message_text += f"   ✅ Статус: {'Выполнено' if task.completed else 'Не выполнено'}\n"
+    message_text += "\n"
 
   await state.set_state(UserState.on_week_page)
   await state.update_data({"week_first_day_date": get_first_day_of_week(datetime.date.today())})

@@ -55,12 +55,21 @@ class ReplyKeyboard:
     resize_keyboard=True
   )
 
+  task_start_time_exists_keyboard = ReplyKeyboardMarkup(
+    keyboard=[
+      [KeyboardButton(text="Да, будет время начала"), KeyboardButton(text="Нет, не будет времени начала")],
+      [KeyboardButton(text="🔙 Главное меню")]
+    ],
+    resize_keyboard=True
+  )
+
   edit_task_keyboard = ReplyKeyboardMarkup(
     keyboard=[
       [KeyboardButton(text="Название задачи")],
       [KeyboardButton(text="Длительность задачи")],
       [KeyboardButton(text="Дедлайн задачи")],
       [KeyboardButton(text="Изменить статус задачи")],
+      [KeyboardButton(text="Время начала задачи")],
       [KeyboardButton(text="🔙 Главное меню")]
     ],
     resize_keyboard=True
@@ -86,6 +95,7 @@ class ReplyKeyboard:
       [KeyboardButton(text="Дедлайн задачи")],
       [KeyboardButton(text="Изменить статус задачи")],
       [KeyboardButton(text="Изменить назначенный день задачи")],
+      [KeyboardButton(text="Время начала задачи")],
       [KeyboardButton(text="🔙 Главное меню")]
     ],
     resize_keyboard=True
@@ -151,13 +161,15 @@ class ReplyKeyboard:
 
   edit_project_task_keyboard = ReplyKeyboardMarkup(
     keyboard=[
-      [KeyboardButton(text="Ответственный за задачу")],
       [KeyboardButton(text="Название задачи")],
       [KeyboardButton(text="Длительность задачи")],
       [KeyboardButton(text="Дедлайн задачи")],
       [KeyboardButton(text="Изменить статус задачи")],
-      [KeyboardButton(text="Изменить назначенный день задачи")],
-      [KeyboardButton(text="🔙 Главное меню")]
+      [KeyboardButton(text="Изменить ответственного")],
+      [KeyboardButton(text="Прикрепленный день")],
+      [KeyboardButton(text="Время начала задачи")],
+      [KeyboardButton(text="🔙 Вернуться назад")],
+      [KeyboardButton(text="🏠 На главную страницу")]
     ],
     resize_keyboard=True
   )
@@ -209,17 +221,25 @@ class InlineKeyboard:
     ]
   )
 
+  task_start_time_exists_keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[
+      [InlineKeyboardButton(text="Да, будет время начала", callback_data="start_time_exists")],
+      [InlineKeyboardButton(text="Нет, не будет времени начала", callback_data="start_time_does_not_exist")],
+    ]
+  )
+
   edit_task_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
       [InlineKeyboardButton(text="Название задачи", callback_data="edit_title")],
       [InlineKeyboardButton(text="Длительность задачи", callback_data="edit_duration")],
       [InlineKeyboardButton(text="Дедлайн задачи", callback_data="edit_deadline")],
       [InlineKeyboardButton(text="Изменить статус задачи", callback_data="edit_status")],
+      [InlineKeyboardButton(text="Время начала задачи", callback_data="edit_start_time")],
       [InlineKeyboardButton(text="🔙 Главное меню", callback_data="main_page")]
     ]
   )
 
-  weekly_tasks_keyboard = InlineKeyboardMarkup(
+  edit_task_date_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
       [InlineKeyboardButton(text="✏️ Редактировать задачу", callback_data="edit_daily_task")],
       [InlineKeyboardButton(text="✅ Отметить выполненной", callback_data="mark_as_done")],
@@ -238,6 +258,7 @@ class InlineKeyboard:
       [InlineKeyboardButton(text="Дедлайн задачи", callback_data="edit_deadline")],
       [InlineKeyboardButton(text="Изменить статус задачи", callback_data="edit_status")],
       [InlineKeyboardButton(text="Изменить назначенный день задачи", callback_data="edit_day")],
+      [InlineKeyboardButton(text="Время начала задачи", callback_data="edit_start_time")],
       [InlineKeyboardButton(text="🔙 Главное меню", callback_data="main_page")]
     ]
   )
@@ -305,6 +326,7 @@ class InlineKeyboard:
       [InlineKeyboardButton(text="Дедлайн задачи", callback_data="edit_deadline")],
       [InlineKeyboardButton(text="Изменить статус задачи", callback_data="edit_status")],
       [InlineKeyboardButton(text="Изменить назначенный день задачи", callback_data="edit_day")],
+      [InlineKeyboardButton(text="Время начала задачи", callback_data="edit_start_time")],
       [InlineKeyboardButton(text="🔙 Главное меню", callback_data="go_home")]
     ]
   )

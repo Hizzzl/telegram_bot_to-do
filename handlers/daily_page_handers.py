@@ -31,16 +31,20 @@ async def show_daily_tasks(message, state: FSMContext):
   else:
     message_text = "Ваши задачи:\n\n"
     for i, task in enumerate(tasks):
-      if task.completed:
-        check = "✅"
-      else:
-        check = "❌"
-      message_text += str(i + 1) + ".\n" + "Название: " + str(task.title) + "\n" + "Выполнено: " + check + "\n" + "Дедлайн: " + str(task.deadline) + "\n" + "Длительность: " + str(task.duration) + " минут\n"
-      # message_text += str(task.title) + " " + str(task.deadline) + " " + str(task.duration) + "\n"
+      message_text += f"{i + 1}. {task.title}\n"
+      if task.start_time:
+        message_text += f"   🕒 Начало: {task.start_time.strftime('%H:%M')}\n"
+      message_text += f"   ⏱ Длительность: {task.duration} минут\n"
+      if task.deadline:
+        message_text += f"   📅 Дедлайн: {task.deadline.strftime('%d.%m.%Y')}\n"
+      message_text += f"   ✅ Статус: {'Выполнено' if task.completed else 'Не выполнено'}\n\n"
 
   await state.set_state(UserState.on_day_page)
   await state.update_data({"week_first_day_date": get_first_day_of_week(datetime.date.today())})
-  await state.update_data({"day_date": datetime.date.today()})
+  
+  day_date = data.get("day_date", datetime.date.today())
+  if day_date == datetime.date.today():
+    await state.update_data({"day_date": datetime.date.today()})
 
   keyboard = KeyboardService.get_daily_tasks_keyboard(message.from_user.id)
   await message.answer(
@@ -194,8 +198,15 @@ async def show_tomorrow_tasks(message, state: FSMContext):
     message_text = Messages.Errors.no_tasks
   else:
     message_text = "Задачи за " + str(day_date) + ":\n\n"
-    for task in tasks:
-      message_text += str(task.title) + " " + str(task.deadline) + " " + str(task.duration) + "\n"
+    for i, task in enumerate(tasks):
+      message_text += f"{i + 1}. {task.title}\n"
+      if task.start_time:
+        message_text += f"   🕒 Начало: {task.start_time.strftime('%H:%M')}\n"
+      message_text += f"   ⏱ Длительность: {task.duration} минут\n"
+      if task.deadline:
+        message_text += f"   📅 Дедлайн: {task.deadline.strftime('%d.%m.%Y')}\n"
+      message_text += f"   ✅ Статус: {'Выполнено' if task.completed else 'Не выполнено'}\n\n"
+
 
   await state.set_state(UserState.on_day_page)
   await state.update_data({"week_first_day_date": get_first_day_of_week(day_date)})

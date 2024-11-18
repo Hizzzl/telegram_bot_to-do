@@ -48,7 +48,7 @@ class KeyboardService:
     
   def get_deadline_exists_keyboard(user_id: int) -> ReplyKeyboard:
     """
-    Возвращает клавиатуру для выбора наличия дедлайна
+    Возвращает клавиатуру для выбора наличия дедлайна
     """
     keyboard_type = user_service.get_user_settings(user_id).keyboard_type
 
@@ -56,6 +56,17 @@ class KeyboardService:
       return ReplyKeyboard.task_deadline_exists_keyboard
     if keyboard_type == "inline":
       return InlineKeyboard.task_deadline_exists_keyboard
+
+  def get_task_start_time_exists_keyboard(user_id: int) -> ReplyKeyboard:
+    """
+    Возвращает клавиатуру для выбора наличия времени начала задачи
+    """
+    keyboard_type = user_service.get_user_settings(user_id).keyboard_type
+
+    if keyboard_type == "reply":
+      return ReplyKeyboard.task_start_time_exists_keyboard
+    if keyboard_type == "inline":
+      return InlineKeyboard.task_start_time_exists_keyboard
   
   def get_edit_task_keyboard(user_id: int) -> ReplyKeyboard:
     """
@@ -81,7 +92,7 @@ class KeyboardService:
     
   def get_edit_weekly_task_keyboard(user_id: int) -> ReplyKeyboard:
     """
-    Возвращает клавиатуру для редактирования недельной задачи
+    Возвращает клавиатуру для редактирования недельной задачи
     """
     keyboard_type = user_service.get_user_settings(user_id).keyboard_type
 
